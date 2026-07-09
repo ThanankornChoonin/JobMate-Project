@@ -1,20 +1,48 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { supabase } from "../lib/supabase";
 
 export default function History() {
-  const history = [
-    { job: "Frontend Developer", score: 86 },
-    { job: "Backend Developer", score: 81 },
-    { job: "UX/UI Designer", score: 92 },
-    { job: "Data Analyst", score: 88 },
-  ];
+const [history, setHistory] = useState<any[]>([]);
+
+useEffect(() => {
+  loadHistory();
+}, []);
+
+const loadHistory = async () => {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return;
+
+  const { data, error } = await supabase
+    .from("interview_history")
+    .select("*")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+  console.log(error);
+  return;
+}
+
+if (data) {
+  setHistory(data);
+}
+};
 
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Interview History</Text>
-
-      {history.map((item, index) => (
-        <View key={index} style={styles.card}>
+      {history.length === 0 && (
+    <Text style={{ textAlign: "center", color: "#64748B" }}>
+    No interview history yet
+    </Text>
+        )}
+      {history.map((item) => (
+        <View key={item.id} style={styles.card}>
           <MaterialCommunityIcons
             name="history"
             size={35}
@@ -22,14 +50,15 @@ export default function History() {
           />
 
           <View style={{ marginLeft: 15 }}>
-  <Text style={styles.job}>{item.job}</Text>
-
+  <Text style={styles.job}>
+  {item.level}
+</Text>
   <Text style={styles.score}>
     ⭐ {item.score}/100
   </Text>
 
   <Text style={styles.date}>
-    3 Jul 2026
+    {new Date(item.created_at).toLocaleDateString()}
   </Text>
 </View>
         </View>

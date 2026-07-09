@@ -1,7 +1,8 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import {
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -10,45 +11,80 @@ import {
 
 export default function Result() {
   const router = useRouter();
+  const { result } = useLocalSearchParams();
+
+  const data = result
+    ? JSON.parse(result as string)
+    : {
+        score: 0,
+        level: "Unknown",
+        strengths: [],
+        weaknesses: [],
+        suggestions: [],
+      };
 
   return (
     <SafeAreaView style={styles.container}>
-      <MaterialCommunityIcons
-        name="check-decagram"
-        size={80}
-        color="#22C55E"
-      />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.header}>
+          <MaterialCommunityIcons
+            name="check-decagram"
+            size={80}
+            color="#22C55E"
+          />
 
-      <Text style={styles.title}>Interview Complete</Text>
+          <Text style={styles.title}>Interview Complete</Text>
 
-      <Text style={styles.score}>86 / 100</Text>
+          <Text style={styles.score}>
+            {data.score} / 100
+          </Text>
 
-      <View style={styles.card}>
-        <Text style={styles.section}>Grammar</Text>
+          <Text style={styles.level}>
+            {data.level}
+          </Text>
+        </View>
 
-<View style={styles.bar}>
-  <View style={[styles.fill, { width: "90%" }]} />
-</View>
+        <View style={styles.card}>
+          <Text style={styles.section}>
+            💪 Strengths
+          </Text>
 
-<Text style={styles.section}>Communication</Text>
+          {data.strengths.map((item: string, index: number) => (
+            <Text key={index} style={styles.item}>
+              ✅ {item}
+            </Text>
+          ))}
 
-<View style={styles.bar}>
-  <View style={[styles.fill, { width: "85%" }]} />
-</View>
+          <Text style={styles.section}>
+            📉 Weaknesses
+          </Text>
 
-<Text style={styles.section}>Confidence</Text>
+          {data.weaknesses.map((item: string, index: number) => (
+            <Text key={index} style={styles.item}>
+              • {item}
+            </Text>
+          ))}
 
-<View style={styles.bar}>
-  <View style={[styles.fill, { width: "83%" }]} />
-</View>
-      </View>
+          <Text style={styles.section}>
+            💡 Suggestions
+          </Text>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => router.push("/interview")}
-      >
-        <Text style={styles.buttonText}>Practice Again</Text>
-      </TouchableOpacity>
+          {data.suggestions.map((item: string, index: number) => (
+            <Text key={index} style={styles.item}>
+              ✔ {item}
+            </Text>
+          ))}
+        </View>
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => router.replace("/home")}
+        >
+          <Text style={styles.buttonText}>
+            Back Home
+          </Text>
+        </TouchableOpacity>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -57,65 +93,70 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F4F7FC",
+  },
+
+  header: {
     alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
+    marginTop: 40,
+    marginBottom: 20,
+    paddingHorizontal: 20,
   },
 
   title: {
     fontSize: 28,
     fontWeight: "bold",
     marginTop: 20,
+    color: "#111827",
   },
 
   score: {
-    fontSize: 48,
+    fontSize: 52,
     fontWeight: "bold",
     color: "#22C55E",
-    marginVertical: 25,
+    marginTop: 20,
+  },
+
+  level: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#2563EB",
+    marginTop: 8,
   },
 
   card: {
-    width: "100%",
     backgroundColor: "white",
-    borderRadius: 18,
-    padding: 20,
-    marginBottom: 30,
+    marginHorizontal: 20,
+    borderRadius: 20,
+    padding: 22,
+    marginTop: 20,
+  },
+
+  section: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginTop: 18,
+    marginBottom: 10,
+    color: "#111827",
   },
 
   item: {
-    fontSize: 18,
-    marginBottom: 15,
+    fontSize: 16,
+    color: "#4B5563",
+    marginBottom: 10,
+    lineHeight: 24,
   },
 
   button: {
     backgroundColor: "#2563EB",
-    paddingVertical: 15,
-    paddingHorizontal: 40,
-    borderRadius: 15,
+    margin: 20,
+    paddingVertical: 16,
+    borderRadius: 14,
+    alignItems: "center",
   },
 
   buttonText: {
     color: "white",
-    fontWeight: "bold",
     fontSize: 18,
+    fontWeight: "bold",
   },
-  section: {
-  fontWeight: "bold",
-  marginTop: 10,
-  marginBottom: 6,
-},
-
-bar: {
-  height: 10,
-  backgroundColor: "#E5E7EB",
-  borderRadius: 10,
-  overflow: "hidden",
-  marginBottom: 12,
-},
-
-fill: {
-  height: "100%",
-  backgroundColor: "#2563EB",
-},
 });

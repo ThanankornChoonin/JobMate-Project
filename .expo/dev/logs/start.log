@@ -4101,3 +4101,118 @@
 {"_e":"metro:client_log","_t":1783668985312,"level":"log","data":["When you encounter a performance bottleneck in a large list or a frequently re-rendering component, what specific techniques or APIs do you reach for first to optimize rendering performance?"]}
 {"_e":"metro:client_log","_t":1783669025906,"level":"log","data":["How do you ensure your applications meet accessibility (a11y) standards, and can you give a specific example of a complex UI pattern (like a modal, autocomplete, or data table) where you had to implement ARIA attributes or keyboard navigation manually?"]}
 {"_e":"metro:client_log","_t":1783669059034,"level":"log","data":["Describe your testing strategy for a modern frontend application. How do you decide what to cover with unit tests, integration tests, and end-to-end (E2E) tests, and which tools do you prefer for each layer?"]}
+{"_e":"root:init","_t":1783671582167,"format":"v0-jsonl","version":"57.0.4"}
+{"_e":"env:mode","_t":1783671582169,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1783671582174,"mode":"development","files":["../..\\..\\.env"],"env":{"EXPO_PUBLIC_OPENROUTER_API_KEY":"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"}}
+{"_e":"devserver:start","_t":1783671582950,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../..\\..\\src\\app","serverComponents":false,"serverActions":false,"serverRendering":true,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1783671583645,"serverRoot":"../..\\..","projectRoot":"../..\\..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":true,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"metro:instantiate","_t":1783671589814,"atlas":false,"workers":8,"host":"::","port":8081}
+{"_e":"metro:bundling:started","_t":1783671590142,"id":"2","platform":"web","environment":null,"entry":"node_modules\\expo-router\\entry.js"}
+{"_e":"metro:bundling:progress","_t":1783671590143,"id":"2","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:started","_t":1783671590144,"id":"3","platform":"web","environment":"node","entry":"node_modules\\expo\\node_modules\\@expo\\cli\\node_modules\\@expo\\router-server\\node\\render.js"}
+{"_e":"metro:bundling:progress","_t":1783671590144,"id":"2","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671590144,"id":"3","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671590154,"id":"2","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671590154,"id":"3","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671590256,"id":"2","progress":0.018261504747991236,"total":111,"current":15}
+{"_e":"metro:bundling:progress","_t":1783671590256,"id":"3","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671590356,"id":"2","progress":0.09631391200951249,"total":232,"current":72}
+{"_e":"metro:bundling:progress","_t":1783671590356,"id":"3","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671590456,"id":"2","progress":0.09631391200951249,"total":232,"current":72}
+{"_e":"metro:bundling:progress","_t":1783671590456,"id":"3","progress":0.10480823973914392,"total":139,"current":45}
+{"_e":"metro:bundling:progress","_t":1783671590556,"id":"2","progress":0.22145328719723184,"total":289,"current":136}
+{"_e":"metro:bundling:progress","_t":1783671590556,"id":"3","progress":0.10480823973914392,"total":139,"current":45}
+{"_e":"metro:bundling:progress","_t":1783671590656,"id":"2","progress":0.22145328719723184,"total":289,"current":136}
+{"_e":"metro:bundling:progress","_t":1783671590656,"id":"3","progress":0.185603813140303,"total":318,"current":137}
+{"_e":"metro:bundling:progress","_t":1783671590756,"id":"2","progress":0.22145328719723184,"total":289,"current":136}
+{"_e":"metro:bundling:progress","_t":1783671590756,"id":"3","progress":0.32618406876997486,"total":471,"current":269}
+{"_e":"metro:bundling:progress","_t":1783671590856,"id":"2","progress":0.40005013300210635,"total":517,"current":327}
+{"_e":"metro:bundling:progress","_t":1783671590856,"id":"3","progress":0.32618406876997486,"total":471,"current":269}
+{"_e":"metro:bundling:progress","_t":1783671590956,"id":"2","progress":0.40005013300210635,"total":517,"current":327}
+{"_e":"metro:bundling:progress","_t":1783671590956,"id":"3","progress":0.3802777777777778,"total":540,"current":333}
+{"_e":"metro:bundling:progress","_t":1783671591056,"id":"2","progress":0.40005013300210635,"total":517,"current":327}
+{"_e":"metro:bundling:progress","_t":1783671591056,"id":"3","progress":0.5182328146427059,"total":689,"current":496}
+{"_e":"metro:bundling:progress","_t":1783671591156,"id":"2","progress":0.6717120641596166,"total":715,"current":586}
+{"_e":"metro:bundling:progress","_t":1783671591156,"id":"3","progress":0.5182328146427059,"total":689,"current":496}
+{"_e":"metro:bundling:progress","_t":1783671591257,"id":"2","progress":0.6717120641596166,"total":715,"current":586}
+{"_e":"metro:bundling:progress","_t":1783671591257,"id":"3","progress":0.5711205640696929,"total":786,"current":594}
+{"_e":"metro:bundling:progress","_t":1783671591356,"id":"2","progress":0.7764023262490903,"total":774,"current":682}
+{"_e":"metro:bundling:progress","_t":1783671591356,"id":"3","progress":0.5711205640696929,"total":786,"current":594}
+{"_e":"metro:bundling:progress","_t":1783671591457,"id":"2","progress":0.7764023262490903,"total":774,"current":682}
+{"_e":"metro:bundling:progress","_t":1783671591457,"id":"3","progress":0.8780310010945718,"total":937,"current":878}
+{"_e":"metro:bundling:progress","_t":1783671591566,"id":"2","progress":0.8219342988050082,"total":878,"current":796}
+{"_e":"metro:bundling:progress","_t":1783671591566,"id":"3","progress":0.8780310010945718,"total":937,"current":878}
+{"_e":"metro:bundling:progress","_t":1783671591666,"id":"2","progress":0.8973974631320331,"total":911,"current":863}
+{"_e":"metro:bundling:progress","_t":1783671591666,"id":"3","progress":0.8780310010945718,"total":937,"current":878}
+{"_e":"metro:bundling:progress","_t":1783671591772,"id":"2","progress":0.8973974631320331,"total":968,"current":910}
+{"_e":"metro:bundling:progress","_t":1783671591772,"id":"3","progress":0.8780310010945718,"total":937,"current":878}
+{"_e":"metro:bundling:progress","_t":1783671591872,"id":"2","progress":0.8973974631320331,"total":968,"current":910}
+{"_e":"metro:bundling:progress","_t":1783671591872,"id":"3","progress":0.9883946824013298,"total":1031,"current":1025}
+{"_e":"metro:bundling:done","_t":1783671591984,"id":"3","total":1031,"ms":1840.3677}
+{"_e":"metro:bundling:progress","_t":1783671591984,"id":"2","progress":0.8973974631320331,"total":968,"current":910}
+{"_e":"metro:bundling:progress","_t":1783671592424,"id":"2","progress":0.8973974631320331,"total":968,"current":910}
+{"_e":"metro:bundling:progress","_t":1783671592431,"id":"2","progress":0.999,"total":999,"current":999}
+{"_e":"metro:bundling:progress","_t":1783671592531,"id":"2","progress":0.999,"total":1000,"current":1000}
+{"_e":"metro:bundling:done","_t":1783671592539,"id":"2","total":1000,"ms":2396.0206}
+{"_e":"metro:bundling:started","_t":1783671592561,"id":"4","platform":"web","environment":null,"entry":"node_modules\\expo-router\\entry.js"}
+{"_e":"metro:bundling:progress","_t":1783671592561,"id":"4","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671592564,"id":"4","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671592672,"id":"4","progress":0.15277384111932799,"total":197,"current":77}
+{"_e":"metro:bundling:progress","_t":1783671592772,"id":"4","progress":0.34641632653061216,"total":350,"current":206}
+{"_e":"metro:bundling:progress","_t":1783671592872,"id":"4","progress":0.4889479337441348,"total":532,"current":372}
+{"_e":"metro:bundling:progress","_t":1783671592972,"id":"4","progress":0.5898995047203758,"total":651,"current":500}
+{"_e":"metro:bundling:progress","_t":1783671593072,"id":"4","progress":0.7631629649702929,"total":799,"current":698}
+{"_e":"metro:bundling:progress","_t":1783671593174,"id":"4","progress":0.9263029803459264,"total":932,"current":897}
+{"_e":"metro:bundling:done","_t":1783671593265,"id":"4","total":932,"ms":703.9763}
+{"_e":"metro:client_log","_t":1783671593529,"level":"info","data":["%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools","font-weight:bold"]}
+{"_e":"metro:client_log","_t":1783671593530,"level":"log","data":["Running application \"main\" with appParams:\n","{\"hydrate\": undefined, \"rootTag\": \"#root\"}","\nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."]}
+{"_e":"metro:client_log","_t":1783671593575,"level":"warn","data":["\"shadow*\" style props are deprecated. Use \"boxShadow\"."]}
+{"_e":"metro:client_log","_t":1783671604608,"level":"log","data":["Login button pressed"]}
+{"_e":"metro:client_log","_t":1783671605556,"level":"log","data":["DATA:","{\"session\": {\"access_token\": \"eyJhbGciOiJFUzI1NiIsImtpZCI6IjI4NzI3YTQyLWQ3MDQtNDEyNC1iMzEyLWRhNWNiOTQwNGZkOCIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2t0eWxhZHFjYndrYmV0d2hwa3NwLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJjY2ZmZGQ0Yy01NjhhLTQ4ZWMtODVlNC04ZWQ4ZTViOWFkZGEiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzgzNjc1MjA2LCJpYXQiOjE3ODM2NzE2MDYsImVtYWlsIjoidGVzdC4xMjNAZ21haWwuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbCI6InRlc3QuMTIzQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaG9uZV92ZXJpZmllZCI6ZmFsc2UsInN1YiI6ImNjZmZkZDRjLTU2OGEtNDhlYy04NWU0LThlZDhlNWI5YWRkYSJ9LCJyb2xlIjoiYXV0aGVudGljYXRlZCIsImFhbCI6ImFhbDEiLCJhbXIiOlt7Im1ldGhvZCI6InBhc3N3b3JkIiwidGltZXN0YW1wIjoxNzgzNjcxNjA2fV0sInNlc3Npb25faWQiOiIzMGQ5MGZlOC1iNGZhLTQ5MTEtYjYwNy1mNzBiNGIzMjJjNWIiLCJpc19hbm9ueW1vdXMiOmZhbHNlfQ.LAd-w7NxFukj4Z-kXfEqFdRgqcgQJG_t4pyQXVKRmgJ-AkxslA8zBazu-X3_sMyuJ4pQLB0ufSh1OwO_26R9KQ\", \"expires_at\": 1783675206, \"expires_in\": 3600, \"refresh_token\": \"bfh5jzihu43l\", \"token_type\": \"bearer\", \"user\": {\"app_metadata\": [Object], \"aud\": \"authenticated\", \"confirmed_at\": \"2026-07-08T03:16:46.629032Z\", \"created_at\": \"2026-07-08T03:16:46.619743Z\", \"email\": \"test.123@gmail.com\", \"email_confirmed_at\": \"2026-07-08T03:16:46.629032Z\", \"id\": \"ccffdd4c-568a-48ec-85e4-8ed8e5b9adda\", \"identities\": [Array], \"is_anonymous\": false, \"last_sign_in_at\": \"2026-07-10T08:20:05.938301575Z\", \"phone\": \"\", \"role\": \"authenticated\", \"updated_at\": \"2026-07-10T08:20:05.995377Z\", \"user_metadata\": [Object]}, \"weak_password\": null}, \"user\": {\"app_metadata\": {\"provider\": \"email\", \"providers\": [Array]}, \"aud\": \"authenticated\", \"confirmed_at\": \"2026-07-08T03:16:46.629032Z\", \"created_at\": \"2026-07-08T03:16:46.619743Z\", \"email\": \"test.123@gmail.com\", \"email_confirmed_at\": \"2026-07-08T03:16:46.629032Z\", \"id\": \"ccffdd4c-568a-48ec-85e4-8ed8e5b9adda\", \"identities\": [[Object]], \"is_anonymous\": false, \"last_sign_in_at\": \"2026-07-10T08:20:05.938301575Z\", \"phone\": \"\", \"role\": \"authenticated\", \"updated_at\": \"2026-07-10T08:20:05.995377Z\", \"user_metadata\": {\"email\": \"test.123@gmail.com\", \"email_verified\": true, \"phone_verified\": false, \"sub\": \"ccffdd4c-568a-48ec-85e4-8ed8e5b9adda\"}}}"]}
+{"_e":"metro:client_log","_t":1783671605556,"level":"log","data":["ERROR:","null"]}
+{"_e":"metro:client_log","_t":1783671608249,"level":"log","data":["[ReferenceError: MY_API_KEY is not defined]"]}
+{"_e":"metro:client_log","_t":1783671737824,"level":"log","data":["[ReferenceError: MY_API_KEY is not defined]"]}
+{"_e":"metro:bundling:started","_t":1783671740866,"id":"7","platform":"web","environment":null,"entry":"node_modules\\expo-router\\entry.js"}
+{"_e":"metro:bundling:progress","_t":1783671740867,"id":"7","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:started","_t":1783671740867,"id":"8","platform":"web","environment":"node","entry":"node_modules\\expo\\node_modules\\@expo\\cli\\node_modules\\@expo\\router-server\\node\\render.js"}
+{"_e":"metro:bundling:progress","_t":1783671740867,"id":"7","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671740867,"id":"8","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671740868,"id":"7","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671740868,"id":"8","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671740971,"id":"7","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671740971,"id":"8","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671741082,"id":"7","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671741082,"id":"8","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671741205,"id":"7","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671741206,"id":"8","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671741309,"id":"7","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671741309,"id":"8","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671741409,"id":"7","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671741409,"id":"8","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671741509,"id":"7","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671741509,"id":"8","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671741609,"id":"7","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671741609,"id":"8","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671741709,"id":"7","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671741709,"id":"8","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671741809,"id":"7","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671741809,"id":"8","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671741909,"id":"7","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671741909,"id":"8","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671742009,"id":"7","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671742009,"id":"8","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671742109,"id":"7","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671742109,"id":"8","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671742219,"id":"7","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783671742219,"id":"8","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1783671742240,"id":"8","total":1,"ms":1372.7743}
+{"_e":"metro:bundling:progress","_t":1783671742240,"id":"7","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1783671742679,"id":"7","total":1,"ms":1812.5472}
+{"_e":"metro:bundling:started","_t":1783671742724,"id":"9","platform":"web","environment":null,"entry":"node_modules\\expo-router\\entry.js"}
+{"_e":"metro:bundling:progress","_t":1783671742725,"id":"9","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1783671742775,"id":"9","total":1,"ms":50.8111}
+{"_e":"metro:client_log","_t":1783671743051,"level":"info","data":["%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools","font-weight:bold"]}
+{"_e":"metro:client_log","_t":1783671743051,"level":"log","data":["Running application \"main\" with appParams:\n","{\"hydrate\": undefined, \"rootTag\": \"#root\"}","\nDevelopment-level warnings: ON.\nPerformance optimizations: OFF."]}
+{"_e":"metro:client_log","_t":1783671743085,"level":"warn","data":["\"shadow*\" style props are deprecated. Use \"boxShadow\"."]}
+{"_e":"metro:client_log","_t":1783671750020,"level":"warn","data":["props.pointerEvents is deprecated. Use style.pointerEvents"]}
+{"_e":"metro:client_log","_t":1783671756235,"level":"log","data":["Can you describe a situation where you had to optimize a slow-performing API endpoint? What profiling tools did you use, and what specific changes—whether query optimization, caching strategies, or code refactoring—yielded the most significant improvement?"]}

@@ -1,9 +1,9 @@
 import { useRouter } from "expo-router";
 import {
-    SafeAreaView,
-    StyleSheet,
-    Text,
-    TouchableOpacity
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity
 } from "react-native";
 
 export default function SelectPosition() {
@@ -26,7 +26,14 @@ export default function SelectPosition() {
         <TouchableOpacity
           key={job}
           style={styles.card}
-          onPress={() => router.push("/interview")}
+          onPress={() =>
+  router.push({
+    pathname: "/interview",
+    params: {
+      position: job,
+    },
+  })
+}
         >
           <Text style={styles.job}>{job}</Text>
         </TouchableOpacity>

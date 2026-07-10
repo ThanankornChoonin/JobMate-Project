@@ -51,7 +51,7 @@ if (data) {
 
           <View style={{ marginLeft: 15 }}>
   <Text style={styles.job}>
-  {item.level}
+  {item.position}
 </Text>
   <Text style={styles.score}>
     ⭐ {item.score}/100

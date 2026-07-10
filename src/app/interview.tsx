@@ -1,5 +1,5 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
   SafeAreaView,
@@ -9,11 +9,11 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { model } from "../lib/gemini";
+import { model } from "../lib/openrouter";
 import { supabase } from "../lib/supabase";
-
 export default function Interview() {
   const router = useRouter();
+  const { position } = useLocalSearchParams();
   const [answer, setAnswer] = useState("");
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
@@ -33,7 +33,7 @@ const startInterview = async () => {
     const result = await chat.current.sendMessage(`
 You are a professional English interviewer.
 
-Interview position: Frontend Developer.
+Interview position: ${position}.
 
 Ask ONLY question 1 of 5.
 
@@ -132,10 +132,11 @@ if (questionNumber === 5) {
 
   if (user) {
     await supabase.from("interview_history").insert({
-      user_id: user.id,
-      score: interviewResult.score,
-      level: interviewResult.level,
-    });
+    user_id: user.id,
+    position: position,
+    score: interviewResult.score,
+    level: interviewResult.level,
+});
   }
 
   setLoading(false);
@@ -170,8 +171,8 @@ console.log(response);
       <Text style={styles.title}>AI Interview</Text>
 
       <Text style={styles.subTitle}>
-        Frontend Developer • Question {Math.min(questionNumber, 5)}/5
-      </Text>
+  {position} • Question {Math.min(questionNumber, 5)}/5
+</Text>
 
       <View style={styles.chatCard}>
 

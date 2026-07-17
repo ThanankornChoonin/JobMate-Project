@@ -2,12 +2,11 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
-  SafeAreaView,
-  StyleSheet,
+  SafeAreaView, ScrollView, StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import { model } from "../lib/openrouter";
 import { supabase } from "../lib/supabase";
@@ -15,6 +14,8 @@ export default function Interview() {
   const router = useRouter();
   const { position } = useLocalSearchParams();
   const [answer, setAnswer] = useState("");
+  const scrollViewRef = useRef<ScrollView>(null);
+  const [messages, setMessages] = useState<any[]>([]);
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
   const [questionNumber, setQuestionNumber] = useState(1);
@@ -41,6 +42,12 @@ Return ONLY the question.
 `);
 
     setQuestion(result.response.text());
+    setMessages([
+  {
+    sender: "ai",
+    text: result.response.text(),
+  },
+]);
   } catch (error) {
     console.log(error);
     setQuestion("Failed to load question.");
@@ -50,6 +57,16 @@ Return ONLY the question.
   if (!answer.trim()) return;
   const updatedAnswers = [...answers, answer];
 setAnswers(updatedAnswers);
+
+const updatedMessages = [
+  ...messages,
+  {
+    sender: "user",
+    text: answer,
+  },
+];
+
+setMessages(updatedMessages);
   try {
     setLoading(true);
 
@@ -131,12 +148,28 @@ if (questionNumber === 5) {
   } = await supabase.auth.getUser();
 
   if (user) {
-    await supabase.from("interview_history").insert({
+    const { error } = await supabase
+  .from("interview_history")
+  .insert({
     user_id: user.id,
     position: position,
     score: interviewResult.score,
     level: interviewResult.level,
-});
+    strengths: JSON.stringify(interviewResult.strengths),
+    weaknesses: JSON.stringify(interviewResult.weaknesses),
+    suggestions: JSON.stringify(interviewResult.suggestions),
+    conversation: JSON.stringify([
+  ...updatedMessages,
+  {
+    sender: "ai",
+    text: `Final Score: ${interviewResult.score}/100 (${interviewResult.level})`,
+  },
+]),
+  });
+
+if (error) {
+  console.log(error);
+}
   }
 
   setLoading(false);
@@ -155,6 +188,15 @@ console.log(response);
 
    if (questionNumber < 5) {
   setQuestion(response);
+
+  setMessages((prev) => [
+    ...prev,
+    {
+      sender: "ai",
+      text: response,
+    },
+  ]);
+
   setQuestionNumber((prev) => prev + 1);
 }
 
@@ -182,13 +224,52 @@ console.log(response);
           color="#2563EB"
         />
 
-        <Text style={styles.question}>
-          {question}
-        </Text>
 
-        <Text style={styles.tip}>
-          Answer in English as if you were in a real interview.
-        </Text>
+        
+  <ScrollView
+  ref={scrollViewRef}
+  style={{ flex: 1 }}
+  showsVerticalScrollIndicator={false}
+  onContentSizeChange={() =>
+    scrollViewRef.current?.scrollToEnd({ animated: true })
+  }
+>
+ {messages.map((msg, index) => (
+    <View
+      key={index}
+      style={{
+        alignSelf:
+          msg.sender === "user"
+            ? "flex-end"
+            : "flex-start",
+        backgroundColor:
+          msg.sender === "user"
+            ? "#2563EB"
+            : "#E5E7EB",
+        padding: 12,
+        borderRadius: 12,
+        marginVertical: 5,
+        maxWidth: "85%",
+      }}
+    >
+      <Text
+        style={{
+          color:
+            msg.sender === "user"
+              ? "white"
+              : "black",
+        }}
+      >
+        {msg.text}
+      </Text>
+    </View>
+  ))}
+</ScrollView> 
+
+
+<Text style={styles.tip}>
+  Answer in English as if you were in a real interview.
+</Text>
 
       </View>
 
@@ -216,11 +297,10 @@ console.log(response);
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#F4F7FC",
-    padding: 20,
-    justifyContent: "center",
-  },
+  flex: 1,
+  backgroundColor: "#F4F7FC",
+  padding: 20,
+},
 
   title: {
     fontSize: 30,
@@ -237,18 +317,19 @@ const styles = StyleSheet.create({
   },
 
   chatCard: {
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 25,
-    alignItems: "center",
-    marginBottom: 25,
+  flex: 1,
+  backgroundColor: "white",
+  borderRadius: 20,
+  padding: 25,
+  alignItems: "stretch",
+  marginBottom: 15,
 
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
+  shadowColor: "#000",
+  shadowOpacity: 0.08,
+  shadowRadius: 8,
 
-    elevation: 4,
-  },
+  elevation: 4,
+},
 
   question: {
     fontSize: 22,

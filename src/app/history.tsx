@@ -1,9 +1,11 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { supabase } from "../lib/supabase";
 
 export default function History() {
+const router = useRouter();
 const [history, setHistory] = useState<any[]>([]);
 
 useEffect(() => {
@@ -42,27 +44,48 @@ if (data) {
     </Text>
         )}
       {history.map((item) => (
-        <View key={item.id} style={styles.card}>
-          <MaterialCommunityIcons
-            name="history"
-            size={35}
-            color="#2563EB"
-          />
+  <TouchableOpacity
+    key={item.id}
+    style={styles.card}
+    onPress={() =>
+      router.push({
+        pathname: "/history-detail",
+        params: {
+    score: item.score,
+    level: item.level,
+    strengths: item.strengths,
+    weaknesses: item.weaknesses,
+    suggestions: item.suggestions,
+    conversation: item.conversation,
+},
+      })
+    }
+  >
+    <MaterialCommunityIcons
+      name="history"
+      size={35}
+      color="#2563EB"
+    />
 
-          <View style={{ marginLeft: 15 }}>
-  <Text style={styles.job}>
-  {item.position}
-</Text>
-  <Text style={styles.score}>
-    ⭐ {item.score}/100
-  </Text>
+    <View style={{ marginLeft: 15 }}>
+      <Text style={styles.job}>
+        {item.position}
+      </Text>
 
-  <Text style={styles.date}>
-    {new Date(item.created_at).toLocaleDateString()}
-  </Text>
-</View>
-        </View>
-      ))}
+      <Text style={styles.score}>
+        ⭐ {item.score}/100
+      </Text>
+
+      <Text style={{ color: "#2563EB", marginTop: 3 }}>
+        {item.level}
+      </Text>
+
+      <Text style={styles.date}>
+        {new Date(item.created_at).toLocaleDateString()}
+      </Text>
+    </View>
+  </TouchableOpacity>
+))}
     </SafeAreaView>
   );
 }

@@ -1,0 +1,25 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "multer": "^2.2.0",
+    "openai": "^7.3.0",
+    "pdf-parse": "^1.1.1",
+    "pdfjs-dist": "^6.2.108"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

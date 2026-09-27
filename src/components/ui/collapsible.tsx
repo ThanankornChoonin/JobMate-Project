@@ -1,3 +1,12 @@
+/**
+ * ============================================================================
+ * JobMate Components - Collapsible Accordion (src/components/ui/collapsible.tsx)
+ * ============================================================================
+ * คอมโพเนนต์กล่องพับเก็บ/ขยายเนื้อหา (Accordion):
+ * - มีแอนิเมชัน FadeIn เมื่อเปิดเนื้อหา
+ * - หมุนลูกศร Chevron ตามสถานะเปิด/ปิด
+ */
+
 import { SymbolView } from 'expo-symbols';
 import { PropsWithChildren, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
@@ -8,6 +17,11 @@ import { ThemedView } from '@/components/themed-view';
 import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
+/**
+ * Collapsible Component
+ * @param title - หัวข้อของกล่อง Accordion
+ * @param children - เนื้อหาภายในที่จะแสดงเมื่อเปิด
+ */
 export function Collapsible({ children, title }: PropsWithChildren & { title: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const theme = useTheme();

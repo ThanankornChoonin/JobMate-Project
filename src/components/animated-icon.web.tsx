@@ -1,3 +1,10 @@
+/**
+ * ============================================================================
+ * JobMate Components - Web Animated Icon (src/components/animated-icon.web.tsx)
+ * ============================================================================
+ * ไอคอนแอนิเมชันสำหรับ Web Browser โดยใช้ CSS Modules ร่วมกับ Reanimated
+ */
+
 import { Image } from 'expo-image';
 import { StyleSheet, View } from 'react-native';
 import Animated, { Keyframe, Easing } from 'react-native-reanimated';
@@ -54,6 +61,9 @@ const glowKeyframe = new Keyframe({
   },
 });
 
+/**
+ * AnimatedIcon Component for Web
+ */
 export function AnimatedIcon() {
   return (
     <View style={styles.iconContainer}>

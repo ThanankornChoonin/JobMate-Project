@@ -1,24 +1,48 @@
+/**
+ * ============================================================================
+ * หน้าจอ: รายละเอียดประวัติย้อนหลัง (History Detail Screen)
+ * ============================================================================
+ * ไฟล์: src/app/history-detail.tsx
+ *
+ * รายละเอียด:
+ * - แสดงรายละเอียดผลการประเมินย้อนหลัง ทั้งแบบ CV Review และ AI Interview
+ * - รับพารามิเตอร์ผ่าน URL params: type, position, score, level, status, strengths, weaknesses, suggestions, conversation
+ * - กรณีเป็นผลตรวจ CV: แสดงการ์ดสถานะการสมัครงาน (Application Status) ที่อัปเดตโดย HR
+ * - กรณีเป็นผลสัมภาษณ์: แสดงบทสนทนาโต้ตอบระหว่าง AI กับผู้สมัครในอดีต (Chat History)
+ */
+
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import {
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+    SafeAreaView,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from "react-native";
+import { useLanguage } from "../context/language-context";
 
+/**
+ * คอมโพเนนต์หลักของหน้ารายละเอียดประวัติ
+ */
 export default function HistoryDetail() {
   const router = useRouter();
+  const { t } = useLanguage();
   const params = useLocalSearchParams();
 
   const type = (params.type as string) || "interview";
-  const position = (params.position as string) || "General Position";
+  const position = (params.position as string) || t.historyDetail.generalPosition;
   const score = Number(params.score) || 0;
-  const level = (params.level as string) || "Evaluated";
+  const level = (params.level as string) || t.historyDetail.evaluated;
+  const status = (params.status as string) || "new";
 
-  // Parse JSON Data
+  /**
+   * ฟังก์ชันช่วยแปลงข้อมูล String JSON กลับเป็น Array หรือ Object
+   *
+   * @param data ข้อมูลดิบที่อาจเป็น JSON string หรือโครงสร้างอื่น
+   * @returns ข้อมูลที่ parse เรียบร้อยแล้ว
+   */
   const parseData = (data: any) => {
     if (!data) return [];
     if (typeof data === "string") {
@@ -38,6 +62,59 @@ export default function HistoryDetail() {
 
   const isPassed = score >= 50;
 
+  const getStatusDetailConfig = (statusKey: string) => {
+    switch (statusKey) {
+      case "interview":
+        return {
+          title: t.historyDetail.statuses.interview,
+          description: t.historyDetail.statusDescriptions.interview,
+          color: "#7C3AED",
+          bg: "#EDE9FE",
+          border: "#DDD6FE",
+          icon: "calendar-clock-outline" as const,
+        };
+      case "passed":
+        return {
+          title: t.historyDetail.statuses.passed,
+          description: t.historyDetail.statusDescriptions.passed,
+          color: "#16A34A",
+          bg: "#DCFCE7",
+          border: "#BBF7D0",
+          icon: "check-circle-outline" as const,
+        };
+      case "rejected":
+        return {
+          title: t.historyDetail.statuses.rejected,
+          description: t.historyDetail.statusDescriptions.rejected,
+          color: "#DC2626",
+          bg: "#FEE2E2",
+          border: "#FECACA",
+          icon: "close-circle-outline" as const,
+        };
+      case "reviewing":
+        return {
+          title: t.historyDetail.statuses.reviewing,
+          description: t.historyDetail.statusDescriptions.reviewing,
+          color: "#D97706",
+          bg: "#FEF3C7",
+          border: "#FDE68A",
+          icon: "file-search-outline" as const,
+        };
+      case "new":
+      default:
+        return {
+          title: t.historyDetail.statuses.new,
+          description: t.historyDetail.statusDescriptions.new,
+          color: "#0284C7",
+          bg: "#E0F2FE",
+          border: "#BAE6FD",
+          icon: "email-check-outline" as const,
+        };
+    }
+  };
+
+  const statusDetail = getStatusDetailConfig(status);
+
   return (
     <SafeAreaView style={styles.container}>
       {/* Top Header */}
@@ -46,7 +123,7 @@ export default function HistoryDetail() {
           <MaterialCommunityIcons name="arrow-left" size={24} color="#0F172A" />
         </TouchableOpacity>
         <Text style={styles.topBarTitle}>
-          {type === "cv" ? "CV Evaluation Result" : "Interview Result"}
+          {type === "cv" ? t.historyDetail.cvTitle : t.historyDetail.interviewTitle}
         </Text>
         <View style={{ width: 40 }} />
       </View>
@@ -55,6 +132,24 @@ export default function HistoryDetail() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
+        {/* Application Status Card (for CV reviews) */}
+        {type === "cv" && (
+          <View style={[styles.statusCard, { backgroundColor: statusDetail.bg, borderColor: statusDetail.border }]}>
+            <View style={styles.statusCardHeader}>
+              <View style={[styles.statusIconCircle, { backgroundColor: statusDetail.color }]}>
+                <MaterialCommunityIcons name={statusDetail.icon} size={22} color="#FFFFFF" />
+              </View>
+              <View style={styles.statusTitleWrapper}>
+                <Text style={styles.statusEyebrow}>{t.historyDetail.applicationStatus}</Text>
+                <Text style={[styles.statusTitle, { color: statusDetail.color }]}>
+                  {statusDetail.title}
+                </Text>
+              </View>
+            </View>
+            <Text style={styles.statusDescription}>{statusDetail.description}</Text>
+          </View>
+        )}
+
         {/* Score & Position Header Card */}
         <View style={styles.headerCard}>
           <View style={styles.headerInfo}>
@@ -71,7 +166,7 @@ export default function HistoryDetail() {
                   { color: type === "cv" ? "#D97706" : isPassed ? "#16A34A" : "#DC2626" },
                 ]}
               >
-                {type === "cv" ? "CV Evaluation" : level}
+                {type === "cv" ? t.historyDetail.cvEvaluation : level}
               </Text>
             </View>
           </View>
@@ -100,7 +195,7 @@ export default function HistoryDetail() {
             <View style={styles.sectionHeader}>
               <MaterialCommunityIcons name="check-circle-outline" size={20} color="#16A34A" />
               <Text style={[styles.sectionTitle, { color: "#16A34A" }]}>
-                จุดแข็ง (Strengths)
+                {t.historyDetail.strengths}
               </Text>
             </View>
             {strengths.map((item, index) => (
@@ -118,7 +213,7 @@ export default function HistoryDetail() {
             <View style={styles.sectionHeader}>
               <MaterialCommunityIcons name="alert-circle-outline" size={20} color="#D97706" />
               <Text style={[styles.sectionTitle, { color: "#D97706" }]}>
-                จุดที่ควรพัฒนา (Weaknesses)
+                {t.historyDetail.weaknesses}
               </Text>
             </View>
             {weaknesses.map((item, index) => (
@@ -136,7 +231,7 @@ export default function HistoryDetail() {
             <View style={styles.sectionHeader}>
               <MaterialCommunityIcons name="lightbulb-outline" size={20} color="#2563EB" />
               <Text style={[styles.sectionTitle, { color: "#2563EB" }]}>
-                คำแนะนำเพิ่มเติม (Suggestions)
+                {t.historyDetail.suggestions}
               </Text>
             </View>
             {suggestions.map((item, index) => (
@@ -154,7 +249,7 @@ export default function HistoryDetail() {
             <View style={styles.sectionHeader}>
               <MaterialCommunityIcons name="forum-outline" size={20} color="#7C3AED" />
               <Text style={[styles.sectionTitle, { color: "#7C3AED" }]}>
-                ประวัติการสัมภาษณ์กับ AI
+                {t.historyDetail.interviewHistory}
               </Text>
             </View>
 
@@ -171,7 +266,7 @@ export default function HistoryDetail() {
                       ]}
                     >
                       <Text style={isUser ? styles.userLabel : styles.aiLabel}>
-                        {isUser ? "You" : "AI Interviewer"}
+                        {isUser ? t.historyDetail.you : t.historyDetail.interviewer}
                       </Text>
                       <Text style={isUser ? styles.userText : styles.aiText}>
                         {msg.text}
@@ -183,7 +278,7 @@ export default function HistoryDetail() {
             ) : (
               <View style={styles.emptyChat}>
                 <MaterialCommunityIcons name="chat-remove-outline" size={32} color="#94A3B8" />
-                <Text style={styles.emptyChatText}>ไม่พบข้อมูลประวัติบทสนทนาการสัมภาษณ์</Text>
+                <Text style={styles.emptyChatText}>{t.historyDetail.emptyChat}</Text>
               </View>
             )}
           </View>
@@ -224,6 +319,44 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: 20,
     gap: 16,
+  },
+  statusCard: {
+    borderRadius: 20,
+    padding: 18,
+    borderWidth: 1.5,
+  },
+  statusCardHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    marginBottom: 8,
+  },
+  statusIconCircle: {
+    width: 42,
+    height: 42,
+    borderRadius: 14,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  statusTitleWrapper: {
+    flex: 1,
+  },
+  statusEyebrow: {
+    fontSize: 11,
+    fontWeight: "700",
+    color: "#64748B",
+    letterSpacing: 0.5,
+    textTransform: "uppercase",
+  },
+  statusTitle: {
+    fontSize: 17,
+    fontWeight: "800",
+    marginTop: 2,
+  },
+  statusDescription: {
+    fontSize: 13,
+    color: "#334155",
+    lineHeight: 19,
   },
   headerCard: {
     backgroundColor: "#FFFFFF",

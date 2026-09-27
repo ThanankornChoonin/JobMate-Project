@@ -1,3 +1,10 @@
+/**
+ * ============================================================================
+ * JobMate Components - Animated Icon & Splash (src/components/animated-icon.tsx)
+ * ============================================================================
+ * แสดงแอนิเมชัน Splash Overlay และไอคอนหมุนเรืองแสงสำหรับ Native (iOS / Android)
+ */
+
 import { Image } from 'expo-image';
 import * as SplashScreen from 'expo-splash-screen';
 import { useState } from 'react';
@@ -8,6 +15,10 @@ import { scheduleOnRN } from 'react-native-worklets';
 const INITIAL_SCALE_FACTOR = Dimensions.get('screen').height / 90;
 const DURATION = 600;
 
+/**
+ * AnimatedSplashOverlay
+ * แสดงแอนิเมชันตอนเปิดแอปก่อนซ่อน Splash Screen
+ */
 export function AnimatedSplashOverlay() {
   const [animate, setAnimate] = useState(false);
   const [visible, setVisible] = useState(true);
@@ -95,6 +106,10 @@ const glowKeyframe = new Keyframe({
   },
 });
 
+/**
+ * AnimatedIcon
+ * ไอคอนโลโก้พร้อมแอนิเมชันหมุนแสง Glow
+ */
 export function AnimatedIcon() {
   return (
     <View style={styles.iconContainer}>

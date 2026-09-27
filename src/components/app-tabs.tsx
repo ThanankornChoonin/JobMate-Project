@@ -1,8 +1,18 @@
+/**
+ * ============================================================================
+ * JobMate Components - Native Tab Bar (src/components/app-tabs.tsx)
+ * ============================================================================
+ * แถบเนวิเกชันด้านล่างแบบ Native Tabs สำหรับ iOS และ Android
+ */
+
 import { NativeTabs } from 'expo-router/unstable-native-tabs';
 import { useColorScheme } from 'react-native';
 
 import { Colors } from '@/constants/theme';
 
+/**
+ * AppTabs Component (Native)
+ */
 export default function AppTabs() {
   const scheme = useColorScheme();
   const colors = Colors[scheme === 'unspecified' ? 'light' : scheme];

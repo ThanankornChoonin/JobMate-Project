@@ -1,12 +1,17 @@
 /**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
+ * ============================================================================
+ * JobMate Design - Theme, Fonts & Spacing (src/constants/theme.ts)
+ * ============================================================================
+ * กำหนดค่าชุดสี Light/Dark mode, แบบอักษรตามแพลตฟอร์ม, ระยะห่าง (Spacing),
+ * และค่าคงที่สำหรับ Inset ของหน้าจอ
  */
 
 import '@/global.css';
-
 import { Platform } from 'react-native';
 
+/**
+ * ชุดสีสำหรับโหมดสว่าง (Light) และโหมดมืด (Dark)
+ */
 export const Colors = {
   light: {
     text: '#000000',
@@ -26,15 +31,14 @@ export const Colors = {
 
 export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
 
+/**
+ * กำหนด Font Family ตามแพลตฟอร์ม (iOS, Android/Default, Web)
+ */
 export const Fonts = Platform.select({
   ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
     sans: 'system-ui',
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
     serif: 'ui-serif',
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
     rounded: 'ui-rounded',
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
     mono: 'ui-monospace',
   },
   default: {
@@ -51,6 +55,9 @@ export const Fonts = Platform.select({
   },
 });
 
+/**
+ * ระยะห่างมาตรฐาน (Spacing Scale) ในหน่วยพิกเซล
+ */
 export const Spacing = {
   half: 2,
   one: 4,
@@ -61,5 +68,12 @@ export const Spacing = {
   six: 64,
 } as const;
 
+/**
+ * ระยะ Inset ด้านล่างสำหรับ Tab Bar บนอุปกรณ์มือถือ
+ */
 export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
+
+/**
+ * ความกว้างสูงสุดของคอนเทนต์ในจอใหญ่ (Web / Tablet)
+ */
 export const MaxContentWidth = 800;

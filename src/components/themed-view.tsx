@@ -1,3 +1,10 @@
+/**
+ * ============================================================================
+ * JobMate Components - Themed View (src/components/themed-view.tsx)
+ * ============================================================================
+ * คอนเทนเนอร์ View พื้นฐานที่ปรับสีพื้นหลังตามโหมดธีมปัจจุบัน (Light/Dark) อัตโนมัติ
+ */
+
 import { View, type ViewProps } from 'react-native';
 
 import { ThemeColor } from '@/constants/theme';
@@ -9,6 +16,9 @@ export type ThemedViewProps = ViewProps & {
   type?: ThemeColor;
 };
 
+/**
+ * ThemedView Component
+ */
 export function ThemedView({ style, lightColor, darkColor, type, ...otherProps }: ThemedViewProps) {
   const theme = useTheme();
 

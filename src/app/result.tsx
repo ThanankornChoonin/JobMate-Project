@@ -1,3 +1,20 @@
+/**
+ * ============================================================================
+ * หน้าจอ: สรุปผลการสัมภาษณ์งาน (Interview Result Screen)
+ * ============================================================================
+ * ไฟล์: src/app/result.tsx
+ *
+ * รายละเอียด:
+ * - แสดงรายงานสรุปผลการสัมภาษณ์งานจำลองอย่างละเอียด
+ * - ข้อมูลที่แสดงประกอบด้วย:
+ *     - คะแนนรวมและระดับผลการประเมิน (Passed / Failed)
+ *     - จุดเด่นของผู้สมัครที่สังเกตได้จากคำตอบ (Strengths)
+ *     - จุดที่ควรปรับปรุงพัฒนา (Improvements / Weaknesses)
+ *     - ข้อเสนอแนะเชิงปฏิบัติเพื่อความก้าวหน้า (Suggestions)
+ * - หากมีผลลัพธ์ส่งมาจากหน้า interview จะ parse มาแสดงทันที
+ * - หากไม่มีข้อมูลส่งมา จะดึงผลการสัมภาษณ์ล่าสุดจากตาราง `interview_history` ของ Supabase
+ */
+
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -10,10 +27,16 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import Animated, { FadeInDown, FadeInRight } from "react-native-reanimated";
+import { useLanguage } from "../context/language-context";
 import { supabase } from "../lib/supabase";
 
+/**
+ * คอมโพเนนต์หลักของหน้ารายงานผลการสัมภาษณ์
+ */
 export default function Result() {
   const router = useRouter();
+  const { t } = useLanguage();
   const { result } = useLocalSearchParams();
 
   const [loading, setLoading] = useState(true);
@@ -27,6 +50,7 @@ export default function Result() {
     created_at: "",
   });
 
+  // โหลดผลลัพธ์จาก params หรือดึงผลล่าสุดจาก Supabase
   useEffect(() => {
     if (result) {
       try {
@@ -37,7 +61,7 @@ export default function Result() {
           strengths: Array.isArray(interview.strengths) ? interview.strengths : [],
           weaknesses: Array.isArray(interview.weaknesses) ? interview.weaknesses : [],
           suggestions: Array.isArray(interview.suggestions) ? interview.suggestions : [],
-          position: interview.position || "General Candidate",
+          position: interview.position || t.result.generalCandidate,
           created_at: interview.created_at || new Date().toISOString(),
         });
       } catch (e) {
@@ -50,6 +74,9 @@ export default function Result() {
     }
   }, [result]);
 
+  /**
+   * ดึงข้อมูลผลการประเมินล่าสุดของผู้ใช้จากตาราง `interview_history` ใน Supabase
+   */
   const loadLatestResult = async () => {
     try {
       setLoading(true);
@@ -74,7 +101,7 @@ export default function Result() {
           strengths: typeof latest.strengths === "string" ? JSON.parse(latest.strengths || "[]") : (latest.strengths || []),
           weaknesses: typeof latest.weaknesses === "string" ? JSON.parse(latest.weaknesses || "[]") : (latest.weaknesses || []),
           suggestions: typeof latest.suggestions === "string" ? JSON.parse(latest.suggestions || "[]") : (latest.suggestions || []),
-          position: latest.position || "General Candidate",
+          position: latest.position || t.result.generalCandidate,
           created_at: latest.created_at || "",
         });
       }
@@ -85,18 +112,24 @@ export default function Result() {
     }
   };
 
+  /**
+   * คำนวณสีของวงกลมคะแนนตามช่วงคะแนน
+   *
+   * @param score คะแนนที่ได้ (0-100)
+   * @returns รหัสสี HEX
+   */
   const getScoreColor = (score: number) => {
-    if (score >= 80) return "#16A34A";
-    if (score >= 60) return "#2563EB";
-    if (score >= 40) return "#D97706";
-    return "#DC2626";
+    if (score >= 80) return "#16A34A"; // เขียว: ยอดเยี่ยม
+    if (score >= 60) return "#2563EB"; // น้ำเงิน: ดี/ผ่าน
+    if (score >= 40) return "#D97706"; // ส้ม: พอใช้
+    return "#DC2626";                   // แดง: ต้องปรับปรุง
   };
 
   if (loading) {
     return (
       <SafeAreaView style={[styles.container, styles.centerContent]}>
         <ActivityIndicator size="large" color="#2563EB" />
-        <Text style={styles.loadingText}>Analyzing Interview Results...</Text>
+        <Text style={styles.loadingText}>{t.result.loading}</Text>
       </SafeAreaView>
     );
   }
@@ -108,30 +141,30 @@ export default function Result() {
         <TouchableOpacity style={styles.backButton} onPress={() => router.replace("/home")}>
           <MaterialCommunityIcons name="close" size={22} color="#0F172A" />
         </TouchableOpacity>
-        <Text style={styles.topBarTitle}>Assessment Report</Text>
+        <Text style={styles.topBarTitle}>{t.result.title}</Text>
         <View style={{ width: 40 }} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         {!data.level ? (
           /* Empty State */
-          <View style={styles.emptyContainer}>
+          <Animated.View entering={FadeInDown.duration(550)} style={styles.emptyContainer}>
             <View style={styles.emptyIconBadge}>
               <MaterialCommunityIcons name="clipboard-text-outline" size={56} color="#94A3B8" />
             </View>
-            <Text style={styles.emptyTitle}>No Assessment Found</Text>
+            <Text style={styles.emptyTitle}>{t.result.noAssessment}</Text>
             <Text style={styles.emptySub}>
-              Complete an AI interview session to unlock your detailed score and feedback report.
+              {t.result.noAssessmentSub}
             </Text>
             <TouchableOpacity style={styles.primaryBtn} onPress={() => router.replace("/home")}>
-              <Text style={styles.primaryBtnText}>Start New Interview</Text>
+              <Text style={styles.primaryBtnText}>{t.result.startNew}</Text>
             </TouchableOpacity>
-          </View>
+          </Animated.View>
         ) : (
           /* Report Body */
           <>
             {/* Score Banner Header */}
-            <View style={styles.scoreHeaderCard}>
+            <Animated.View entering={FadeInRight.duration(650)} style={styles.scoreHeaderCard}>
               <View style={styles.metaRow}>
                 {data.position ? (
                   <View style={styles.positionBadge}>
@@ -165,8 +198,8 @@ export default function Result() {
               </View>
 
               <Text style={styles.levelTitle}>{data.level}</Text>
-              <Text style={styles.levelSub}>Overall Performance Rank</Text>
-            </View>
+              <Text style={styles.levelSub}>{t.result.performanceRank}</Text>
+            </Animated.View>
 
             {/* Key Strengths */}
             {data.strengths.length > 0 && (
@@ -175,7 +208,7 @@ export default function Result() {
                   <View style={[styles.sectionIconBg, { backgroundColor: "#DCFCE7" }]}>
                     <MaterialCommunityIcons name="thumb-up-outline" size={20} color="#16A34A" />
                   </View>
-                  <Text style={styles.sectionTitle}>Key Strengths</Text>
+                  <Text style={styles.sectionTitle}>{t.result.strengths}</Text>
                 </View>
 
                 {data.strengths.map((item, index) => (
@@ -194,7 +227,7 @@ export default function Result() {
                   <View style={[styles.sectionIconBg, { backgroundColor: "#FEE2E2" }]}>
                     <MaterialCommunityIcons name="alert-circle-outline" size={20} color="#DC2626" />
                   </View>
-                  <Text style={styles.sectionTitle}>Areas to Improve</Text>
+                  <Text style={styles.sectionTitle}>{t.result.improvements}</Text>
                 </View>
 
                 {data.weaknesses.map((item, index) => (
@@ -213,7 +246,7 @@ export default function Result() {
                   <View style={[styles.sectionIconBg, { backgroundColor: "#FEF3C7" }]}>
                     <MaterialCommunityIcons name="lightbulb-on-outline" size={20} color="#D97706" />
                   </View>
-                  <Text style={styles.sectionTitle}>Actionable Suggestions</Text>
+                  <Text style={styles.sectionTitle}>{t.result.suggestions}</Text>
                 </View>
 
                 {data.suggestions.map((item, index) => (
@@ -232,7 +265,7 @@ export default function Result() {
               activeOpacity={0.85}
             >
               <MaterialCommunityIcons name="home-outline" size={20} color="#FFFFFF" />
-              <Text style={styles.primaryBtnText}>Back to Home Dashboard</Text>
+              <Text style={styles.primaryBtnText}>{t.result.home}</Text>
             </TouchableOpacity>
           </>
         )}
@@ -244,7 +277,7 @@ export default function Result() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F8FAFC",
+    backgroundColor: "#F6F7F9",
   },
   centerContent: {
     justifyContent: "center",
@@ -254,7 +287,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
     fontSize: 15,
     fontWeight: "600",
-    color: "#64748B",
+    color: "#AEB9DD",
   },
   topBar: {
     flexDirection: "row",
@@ -262,22 +295,22 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingVertical: 14,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#111111",
     borderBottomWidth: 1,
-    borderBottomColor: "#F1F5F9",
+    borderBottomColor: "rgba(190,200,255,0.12)",
   },
   backButton: {
     width: 40,
     height: 40,
     borderRadius: 12,
-    backgroundColor: "#F1F5F9",
+    backgroundColor: "rgba(255,255,255,0.09)",
     justifyContent: "center",
     alignItems: "center",
   },
   topBarTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#0F172A",
+    color: "#FFFFFF",
   },
   scrollContent: {
     paddingHorizontal: 20,
@@ -294,7 +327,7 @@ const styles = StyleSheet.create({
     width: 96,
     height: 96,
     borderRadius: 48,
-    backgroundColor: "#F1F5F9",
+    backgroundColor: "rgba(255,255,255,0.09)",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 20,
@@ -302,12 +335,12 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 22,
     fontWeight: "800",
-    color: "#0F172A",
+    color: "#111827",
     marginBottom: 8,
   },
   emptySub: {
     fontSize: 14,
-    color: "#64748B",
+    color: "#6B7280",
     textAlign: "center",
     maxWidth: 280,
     lineHeight: 20,
@@ -315,17 +348,17 @@ const styles = StyleSheet.create({
   },
   /* Score Header Card */
   scoreHeaderCard: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "rgba(255,255,255,0.075)",
     borderRadius: 24,
     padding: 24,
     alignItems: "center",
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: "#F1F5F9",
+    borderColor: "rgba(190,200,255,0.12)",
     elevation: 3,
-    shadowColor: "#0F172A",
+    shadowColor: "#000000",
     shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.05,
+    shadowOpacity: 0.2,
     shadowRadius: 12,
   },
   metaRow: {
@@ -379,23 +412,23 @@ const styles = StyleSheet.create({
   levelTitle: {
     fontSize: 22,
     fontWeight: "800",
-    color: "#0F172A",
+    color: "#111827",
     marginBottom: 2,
   },
   levelSub: {
     fontSize: 13,
-    color: "#64748B",
+    color: "#6B7280",
     fontWeight: "500",
   },
   /* Section Card */
   sectionCard: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "rgba(255,255,255,0.075)",
     borderRadius: 20,
     padding: 20,
     marginBottom: 16,
     borderWidth: 1,
     elevation: 2,
-    shadowColor: "#0F172A",
+    shadowColor: "#000000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.03,
     shadowRadius: 8,
@@ -416,7 +449,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#0F172A",
+    color: "#111827",
   },
   listItem: {
     flexDirection: "row",
@@ -430,7 +463,7 @@ const styles = StyleSheet.create({
   itemText: {
     flex: 1,
     fontSize: 14,
-    color: "#334155",
+    color: "#0c0c0d",
     lineHeight: 22,
   },
   /* Primary Button */

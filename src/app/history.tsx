@@ -1,26 +1,50 @@
+/**
+ * ============================================================================
+ * หน้าจอ: ประวัติการประเมินและการสัมภาษณ์ (History Screen)
+ * ============================================================================
+ * ไฟล์: src/app/history.tsx
+ *
+ * รายละเอียด:
+ * - แสดงรายการประวัติการอัปโหลดเรซูเม่ (CV) และประวัติการสัมภาษณ์งานจำลองทั้งหมดของผู้ใช้
+ * - ดึงข้อมูลจากตาราง `cv_history` และ `interview_history` ใน Supabase
+ * - ทำการจับคู่ (Group) การสัมภาษณ์เข้ากับการอัปโหลด CV ที่ตรงกัน (ตาม cv_id หรือ position)
+ * - หากมีการสัมภาษณ์ที่ไม่ได้ผูกกับ CV ใด ระบบจะสร้างการ์ดสัมภาษณ์แบบ Standalone แยกออกมา
+ * - กดเข้าไปดูรายละเอียดผลย้อนหลังได้ในหน้า `/history-detail`
+ */
+
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
-  FlatList,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    FlatList,
+    SafeAreaView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from "react-native";
+import { useLanguage } from "../context/language-context";
 import { supabase } from "../lib/supabase";
 
+/**
+ * คอมโพเนนต์หลักของหน้าประวัติการใช้งาน
+ */
 export default function History() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [cvGroupedHistory, setCvGroupedHistory] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // โหลดประวัติเมื่อเปิดหน้าจอ
   useEffect(() => {
     loadHistory();
   }, []);
 
+  /**
+   * ฟังก์ชันดึงประวัติการอัปโหลด CV และการสัมภาษณ์ของผู้ใช้จาก Supabase
+   * พร้อมจัดกลุ่มความสัมพันธ์ระหว่าง CV และ Interview
+   */
   const loadHistory = async () => {
     try {
       setLoading(true);
@@ -87,7 +111,7 @@ export default function History() {
 
       const standaloneCards = orphanInterviews.map((interview) => ({
         id: `standalone_${interview.id}`,
-        position: interview.position || "AI Interview Session",
+        position: interview.position || t.history.aiInterview,
         created_at: interview.created_at,
         score: interview.score ?? 0,
         is_passed: Number(interview.score) >= 50,
@@ -103,6 +127,11 @@ export default function History() {
     }
   };
 
+  /**
+   * นำทางไปยังหน้ารายละเอียดเมื่อกดดูผลการวิเคราะห์ CV
+   *
+   * @param item ข้อมูลบันทึก CV ที่ถูกคลิก
+   */
   const handleCvPress = (item: any) => {
     const feedback = typeof item.feedback === "string" ? JSON.parse(item.feedback) : item.feedback;
 
@@ -112,6 +141,7 @@ export default function History() {
         type: "cv",
         position: item.position,
         score: item.score,
+        status: item.status || "new",
         level: "CV Evaluation",
         strengths: JSON.stringify(feedback?.strengths || []),
         weaknesses: JSON.stringify(feedback?.weaknesses || []),
@@ -121,6 +151,11 @@ export default function History() {
     });
   };
 
+  /**
+   * นำทางไปยังหน้ารายละเอียดเมื่อกดดูผลการสัมภาษณ์งาน
+   *
+   * @param interview ข้อมูลบันทึกการสัมภาษณ์ที่ถูกคลิก
+   */
   const handleInterviewPress = (interview: any) => {
     const processData = (raw: any) => {
       if (!raw) return [];
@@ -151,9 +186,9 @@ export default function History() {
       pathname: "/history-detail",
       params: {
         type: "interview",
-        position: interview.position || "Interview Report",
+        position: interview.position || t.history.interviewReport,
         score: interview.score ?? 0,
-        level: interview.level || "Evaluated",
+        level: interview.level || t.history.evaluated,
         strengths: JSON.stringify(parsedStrengths),
         weaknesses: JSON.stringify(parsedWeaknesses),
         suggestions: JSON.stringify(parsedSuggestions),
@@ -162,8 +197,59 @@ export default function History() {
     });
   };
 
+  /**
+   * คืนค่าการตั้งค่าสี ไอคอน และข้อความสำหรับแต่ละสถานะของผู้สมัคร
+   *
+   * @param status สถานะใบสมัคร ('new' | 'reviewing' | 'interview' | 'passed' | 'rejected')
+   * @returns ข้อมูลประกอบ Badge { label, color, bg, icon }
+   */
+  const getStatusConfig = (status?: string) => {
+    switch (status) {
+      case "interview":
+        return {
+          label: t.history.statuses.interview,
+          color: "#7C3AED",
+          bg: "#EDE9FE",
+          icon: "calendar-clock-outline" as const,
+        };
+      case "passed":
+        return {
+          label: t.history.statuses.passed,
+          color: "#16A34A",
+          bg: "#DCFCE7",
+          icon: "check-circle-outline" as const,
+        };
+      case "rejected":
+        return {
+          label: t.history.statuses.rejected,
+          color: "#DC2626",
+          bg: "#FEE2E2",
+          icon: "close-circle-outline" as const,
+        };
+      case "reviewing":
+        return {
+          label: t.history.statuses.reviewing,
+          color: "#D97706",
+          bg: "#FEF3C7",
+          icon: "file-search-outline" as const,
+        };
+      case "new":
+      default:
+        return {
+          label: t.history.statuses.new,
+          color: "#0284C7",
+          bg: "#E0F2FE",
+          icon: "email-check-outline" as const,
+        };
+    }
+  };
+
+  /**
+   * เรนเดอร์การ์ดแสดงผลกลุ่มข้อมูล CV และประวัติสัมภาษณ์ที่เกี่ยวข้อง
+   */
   const renderCvGroup = ({ item }: { item: any }) => {
     const isCvPassed = item.is_passed;
+    const statusConfig = getStatusConfig(item.status);
 
     return (
       <View style={styles.card}>
@@ -194,7 +280,7 @@ export default function History() {
             </View>
             <View style={styles.titleWrapper}>
               <Text style={styles.jobTitle} numberOfLines={1}>
-                {item.position || "General Position"}
+                    {item.position || t.history.generalPosition}
               </Text>
 
               <View style={styles.metaRow}>
@@ -210,7 +296,7 @@ export default function History() {
                       { color: item.isStandaloneInterview ? "#15803D" : "#1E40AF" },
                     ]}
                   >
-                    {item.isStandaloneInterview ? "AI Interview" : "CV Analysis"}
+                    {item.isStandaloneInterview ? t.history.aiInterview : t.history.cvAnalysis}
                   </Text>
                 </View>
 
@@ -229,6 +315,19 @@ export default function History() {
                   </Text>
                 </View>
               </View>
+
+              {!item.isStandaloneInterview && (
+                <View style={[styles.statusBadgeRow, { backgroundColor: statusConfig.bg }]}>
+                  <MaterialCommunityIcons
+                    name={statusConfig.icon}
+                    size={13}
+                    color={statusConfig.color}
+                  />
+                  <Text style={[styles.statusBadgeText, { color: statusConfig.color }]}>
+                    {statusConfig.label}
+                  </Text>
+                </View>
+              )}
             </View>
           </View>
 
@@ -262,7 +361,7 @@ export default function History() {
         {/* List of AI Interviews */}
         {item.interviews && item.interviews.length > 0 && (
           <View style={styles.interviewSection}>
-            <Text style={styles.interviewSectionTitle}>💬 ประวัติการสัมภาษณ์ AI</Text>
+            <Text style={styles.interviewSectionTitle}>💬 {t.history.aiHistory}</Text>
             {item.interviews.map((interview: any) => {
               const isInterviewPassed = Number(interview.score) >= 50;
               return (
@@ -282,10 +381,10 @@ export default function History() {
                     </View>
                     <View style={styles.interviewTextWrapper}>
                       <Text style={styles.interviewTitleText}>
-                        ดูบทสนทนาการสัมภาษณ์
+                        {t.history.interviewReport}
                       </Text>
                       <Text style={styles.interviewSubText}>
-                        ระดับ {interview.level || "Evaluated"}
+                        {interview.level || t.history.evaluated}
                       </Text>
                     </View>
                   </View>
@@ -328,7 +427,7 @@ export default function History() {
             onPress={() => handleCvPress(item)}
           >
             <MaterialCommunityIcons name="file-chart-outline" size={18} color="#2563EB" />
-            <Text style={styles.viewDetailText}>ดูรายละเอียดผลการประเมิน CV</Text>
+            <Text style={styles.viewDetailText}>{t.history.viewCv}</Text>
             <MaterialCommunityIcons name="chevron-right" size={18} color="#2563EB" />
           </TouchableOpacity>
         )}
@@ -343,7 +442,7 @@ export default function History() {
         <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
           <MaterialCommunityIcons name="arrow-left" size={24} color="#0F172A" />
         </TouchableOpacity>
-        <Text style={styles.topBarTitle}>History & Reports</Text>
+        <Text style={styles.topBarTitle}>{t.history.title}</Text>
         <View style={{ width: 40 }} />
       </View>
 
@@ -367,9 +466,9 @@ export default function History() {
                   color="#94A3B8"
                 />
               </View>
-              <Text style={styles.emptyTitle}>No History Found</Text>
+              <Text style={styles.emptyTitle}>{t.history.emptyTitle}</Text>
               <Text style={styles.emptySub}>
-                You haven't uploaded any CV or completed any interviews yet.
+                {t.history.emptySub}
               </Text>
             </View>
           }
@@ -481,6 +580,20 @@ const styles = StyleSheet.create({
   dateText: {
     fontSize: 12,
     color: "#94A3B8",
+  },
+  statusBadgeRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "flex-start",
+    gap: 5,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 7,
+    marginTop: 6,
+  },
+  statusBadgeText: {
+    fontSize: 11,
+    fontWeight: "700",
   },
   scoreBadge: {
     paddingHorizontal: 10,

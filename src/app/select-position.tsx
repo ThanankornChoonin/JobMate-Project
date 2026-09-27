@@ -1,63 +1,92 @@
+/**
+ * ============================================================================
+ * หน้าจอ: เลือกตำแหน่งงาน (Select Position Screen)
+ * ============================================================================
+ * ไฟล์: src/app/select-position.tsx
+ *
+ * รายละเอียด:
+ * - แสดงรายการหมวดหมู่งานหรือตำแหน่งที่ผู้สมัครสามารถเลือกเพื่อทำการจำลองสัมภาษณ์
+ * - รองรับระบบหลายภาษา (i18n) ผ่าน useLanguage hook
+ * - มี Animation นุ่มนวลตอนเรนเดอร์การ์ดตำแหน่งงาน (FadeInDown)
+ * - เมื่อคลิกเลือกตำแหน่งงาน จะนำทางผู้ใช้ไปยังหน้าอัปโหลดเรซูเม่ (/upload-cv) พร้อมส่งชื่อตำแหน่งไปด้วย
+ */
+
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import {
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+    SafeAreaView,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from "react-native";
+import Animated, { FadeInDown } from "react-native-reanimated";
+import { useLanguage } from "../context/language-context";
 
+/**
+ * โครงสร้างข้อมูลสำหรับแต่ละตำแหน่งงาน
+ */
 interface JobItem {
-  title: string;
-  subtitle: string;
-  icon: keyof typeof MaterialCommunityIcons.glyphMap;
-  color: string;
+  title: string;                                        // ชื่อตำแหน่งงาน (ดึงตามภาษาที่เลือก)
+  subtitle: string;                                     // คำอธิบายโดยย่อของตำแหน่งงาน
+  icon: keyof typeof MaterialCommunityIcons.glyphMap;    // ชื่อไอคอนจาก MaterialCommunityIcons
+  color: string;                                        // สีหลักของหมวดหมู่ตำแหน่งงาน
 }
 
+/**
+ * คอมโพเนนต์หลักของหน้าเลือกตำแหน่งงาน
+ */
 export default function SelectPosition() {
   const router = useRouter();
+  const { t } = useLanguage();
 
+  // รายการตำแหน่งงานทั้งหมดที่มีให้เลือกในระบบ
   const jobs: JobItem[] = [
     {
-      title: "Frontend Developer",
-      subtitle: "React, Vue, Web Performance & UI",
+      title: t.selectPosition.jobs.frontend.title,
+      subtitle: t.selectPosition.jobs.frontend.subtitle,
       icon: "laptop",
       color: "#2563EB",
     },
     {
-      title: "Backend Developer",
-      subtitle: "Node.js, Databases, API Architecture",
+      title: t.selectPosition.jobs.backend.title,
+      subtitle: t.selectPosition.jobs.backend.subtitle,
       icon: "server-network",
       color: "#0891B2",
     },
     {
-      title: "Full Stack Developer",
-      subtitle: "End-to-End Web & System Design",
+      title: t.selectPosition.jobs.fullstack.title,
+      subtitle: t.selectPosition.jobs.fullstack.subtitle,
       icon: "layers-triple-outline",
       color: "#7C3AED",
     },
     {
-      title: "Mobile Developer",
-      subtitle: "React Native, iOS, Android Apps",
+      title: t.selectPosition.jobs.mobile.title,
+      subtitle: t.selectPosition.jobs.mobile.subtitle,
       icon: "cellphone-cog",
       color: "#D97706",
     },
     {
-      title: "Data Analyst",
-      subtitle: "SQL, Python, Visualization & Insights",
+      title: t.selectPosition.jobs.data.title,
+      subtitle: t.selectPosition.jobs.data.subtitle,
       icon: "chart-box-outline",
       color: "#059669",
     },
     {
-      title: "UX/UI Designer",
-      subtitle: "Figma, Wireframing, User Research",
+      title: t.selectPosition.jobs.ux.title,
+      subtitle: t.selectPosition.jobs.ux.subtitle,
       icon: "palette-outline",
       color: "#DB2777",
     },
   ];
 
+  /**
+   * จัดการการกดเลือกตำแหน่งงาน
+   * ส่งชื่อตำแหน่งไปยังหน้า /upload-cv ผ่าน query params
+   *
+   * @param positionTitle ชื่อตำแหน่งที่ผู้ใช้เลือก
+   */
   const handleSelectJob = (positionTitle: string) => {
     router.push({
       pathname: "/upload-cv",
@@ -78,7 +107,7 @@ export default function SelectPosition() {
         >
           <MaterialCommunityIcons name="arrow-left" size={24} color="#0F172A" />
         </TouchableOpacity>
-        <Text style={styles.topBarTitle}>Select Position</Text>
+        <Text style={styles.topBarTitle}>{t.selectPosition.title}</Text>
         <View style={{ width: 40 }} />
       </View>
 
@@ -86,15 +115,20 @@ export default function SelectPosition() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        <Text style={styles.headerTitle}>Target Role</Text>
-        <Text style={styles.headerSub}>
-          Choose the position you'd like to simulate an AI interview for.
-        </Text>
+        <Animated.View entering={FadeInDown.duration(450)}>
+          <Text style={styles.headerTitle}>{t.selectPosition.targetRole}</Text>
+          <Text style={styles.headerSub}>
+          {t.selectPosition.description}
+          </Text>
+        </Animated.View>
 
         {/* Job Category Cards */}
-        {jobs.map((job) => (
-          <TouchableOpacity
+        {jobs.map((job, index) => (
+          <Animated.View
             key={job.title}
+            entering={FadeInDown.delay(index * 70 + 100).duration(450)}
+          >
+          <TouchableOpacity
             style={styles.card}
             activeOpacity={0.8}
             onPress={() => handleSelectJob(job.title)}
@@ -115,6 +149,7 @@ export default function SelectPosition() {
               style={styles.chevron}
             />
           </TouchableOpacity>
+          </Animated.View>
         ))}
       </ScrollView>
     </SafeAreaView>
@@ -124,7 +159,7 @@ export default function SelectPosition() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F8FAFC",
+    backgroundColor: "#F6F7F9",
   },
   topBar: {
     flexDirection: "row",
@@ -132,22 +167,22 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingVertical: 14,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#111111",
     borderBottomWidth: 1,
-    borderBottomColor: "#F1F5F9",
+    borderBottomColor: "#262626",
   },
   backButton: {
     width: 40,
     height: 40,
     borderRadius: 12,
-    backgroundColor: "#F1F5F9",
+    backgroundColor: "#2A2A2A",
     justifyContent: "center",
     alignItems: "center",
   },
   topBarTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#0F172A",
+    color: "#FFFFFF",
   },
   scrollContent: {
     paddingHorizontal: 20,
@@ -157,12 +192,12 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 24,
     fontWeight: "800",
-    color: "#0F172A",
+    color: "#111827",
     marginBottom: 4,
   },
   headerSub: {
     fontSize: 14,
-    color: "#64748B",
+    color: "#6B7280",
     marginBottom: 24,
     lineHeight: 20,
   },
@@ -174,11 +209,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginBottom: 14,
     borderWidth: 1,
-    borderColor: "#F1F5F9",
+    borderColor: "#E5E7EB",
     elevation: 2,
-    shadowColor: "#0F172A",
+    shadowColor: "#111827",
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.04,
+    shadowOpacity: 0.06,
     shadowRadius: 8,
   },
   iconContainer: {
@@ -195,12 +230,12 @@ const styles = StyleSheet.create({
   jobTitle: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#0F172A",
+    color: "#111827",
     marginBottom: 2,
   },
   jobSubtitle: {
     fontSize: 12,
-    color: "#64748B",
+    color: "#6B7280",
     fontWeight: "500",
   },
   chevron: {

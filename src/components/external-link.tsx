@@ -1,9 +1,22 @@
+/**
+ * ============================================================================
+ * JobMate Components - External Link (src/components/external-link.tsx)
+ * ============================================================================
+ * คอมโพเนนต์สำหรับเปิด URL ภายนอก:
+ * - บน Web: เปิดในแท็บใหม่ด้วย target="_blank"
+ * - บน Native (iOS / Android): ป้องกัน default navigation แล้วเปิดผ่าน In-App Browser (expo-web-browser)
+ */
+
 import { Href, Link } from 'expo-router';
 import { openBrowserAsync, WebBrowserPresentationStyle } from 'expo-web-browser';
 import { type ComponentProps } from 'react';
 
 type Props = Omit<ComponentProps<typeof Link>, 'href'> & { href: Href & string };
 
+/**
+ * ExternalLink Component
+ * ใช้แทนแท็ก <a> ทั่วไป เพื่อเปิดหน้าต่างเบราว์เซอร์อย่างปลอดภัยทั้งบน Native และ Web
+ */
 export function ExternalLink({ href, ...rest }: Props) {
   return (
     <Link
@@ -12,9 +25,9 @@ export function ExternalLink({ href, ...rest }: Props) {
       href={href}
       onPress={async (event) => {
         if (process.env.EXPO_OS !== 'web') {
-          // Prevent the default behavior of linking to the default browser on native.
+          // ป้องกัน default navigation บน native
           event.preventDefault();
-          // Open the link in an in-app browser.
+          // เปิด URL ผ่าน in-app modal browser
           await openBrowserAsync(href, {
             presentationStyle: WebBrowserPresentationStyle.AUTOMATIC,
           });

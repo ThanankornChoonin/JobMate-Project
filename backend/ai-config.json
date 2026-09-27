@@ -1,0 +1,5 @@
+{
+  "engine": "local",
+  "localUrl": "http://localhost:11434/v1",
+  "localModel": "qwen2.5:7b"
+}

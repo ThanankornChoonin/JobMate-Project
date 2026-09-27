@@ -20,6 +20,8 @@
     "pdfjs-dist": "^6.2.108"
   },
   "devDependencies": {
-    "nodemon": "^3.1.14"
+    "nodemon": "^3.1.14",
+    "ts-node": "^10.9.2",
+    "typescript": "^7.0.2"
   }
 }

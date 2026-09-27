@@ -1,3 +1,10 @@
+/**
+ * ============================================================================
+ * JobMate Components - Web Custom Tab Bar (src/components/app-tabs.web.tsx)
+ * ============================================================================
+ * แถบเนวิเกชันแบบ Floating Capsule Bar สำหรับหน้าเว็บเบราว์เซอร์ (Expo Web)
+ */
+
 import {
   Tabs,
   TabList,
@@ -12,9 +19,11 @@ import { Pressable, useColorScheme, View, StyleSheet } from 'react-native';
 import { ExternalLink } from './external-link';
 import { ThemedText } from './themed-text';
 import { ThemedView } from './themed-view';
-
 import { Colors, MaxContentWidth, Spacing } from '@/constants/theme';
 
+/**
+ * AppTabs Component for Web
+ */
 export default function AppTabs() {
   return (
     <Tabs>
@@ -24,7 +33,7 @@ export default function AppTabs() {
           <TabTrigger name="home" href="/" asChild>
             <TabButton>Home</TabButton>
           </TabTrigger>
-          <TabTrigger name="explore" href="/explore" asChild>
+          <TabTrigger name="explore" href={"/explore" as any} asChild>
             <TabButton>Explore</TabButton>
           </TabTrigger>
         </CustomTabList>
@@ -33,6 +42,10 @@ export default function AppTabs() {
   );
 }
 
+/**
+ * TabButton Component
+ * ปุ่มแต่ละแท็บใน Floating Bar
+ */
 export function TabButton({ children, isFocused, ...props }: TabTriggerSlotProps) {
   return (
     <Pressable {...props} style={({ pressed }) => pressed && styles.pressed}>
@@ -47,6 +60,10 @@ export function TabButton({ children, isFocused, ...props }: TabTriggerSlotProps
   );
 }
 
+/**
+ * CustomTabList Component
+ * แถบแคปซูลลอยตัวตรงกลางด้านล่างของหน้าจอเว็บ
+ */
 export function CustomTabList(props: TabListProps) {
   const scheme = useColorScheme();
   const colors = Colors[scheme === 'unspecified' ? 'light' : scheme];
@@ -55,7 +72,7 @@ export function CustomTabList(props: TabListProps) {
     <View {...props} style={styles.tabListContainer}>
       <ThemedView type="backgroundElement" style={styles.innerContainer}>
         <ThemedText type="smallBold" style={styles.brandText}>
-          Expo Starter
+          TonYourTires
         </ThemedText>
 
         {props.children}
